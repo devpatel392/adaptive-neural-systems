@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "adaptive-neural-systems"
+version = "0.0.1"
+description = "Research into genuinely trained neural components for adaptive retrieval, graph reasoning and continual learning."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary - all rights reserved (to be decided)" }
+authors = [{ name = "Dev Patel" }]
+# Phase 0 has no runtime dependencies. Each dependency is added only when a
+# phase actually needs it, with the reason recorded in docs/architecture.md.
+dependencies = []
+
+[project.optional-dependencies]
+# Tooling for tests and code quality. Small, pure-Python or single-binary.
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+# Numerical stack for Phase 1 (neural networks from scratch). Not installed in
+# Phase 0. PyTorch must be installed from the CPU-only index, see README.md.
+ml = [
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/adaptive_neural_systems"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Lets `pytest` find the package without an editable install.
+pythonpath = ["src"]
+addopts = "-ra --strict-markers"
+markers = [
+    "slow: tests that train a model or take more than a few seconds",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes: unused imports, undefined names
+    "I",   # isort: import ordering
+    "B",   # flake8-bugbear: likely bugs
+    "UP",  # pyupgrade: modern syntax for the target version
+    "NPY", # NumPy-specific rules (e.g. legacy np.random usage)
+]
+
+[tool.ruff.format]
+quote-style = "double"
