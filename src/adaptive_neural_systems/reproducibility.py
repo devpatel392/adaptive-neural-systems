@@ -36,8 +36,9 @@ def set_seed(seed: int) -> list[str]:
     if find_spec("numpy") is not None:
         import numpy as np
 
-        # Legacy global state. New code should prefer np.random.default_rng(seed).
-        np.random.seed(seed % 2**32)
+        # Seeds the legacy global state for third-party code that still uses it.
+        # Our own code passes np.random.default_rng(seed) explicitly instead.
+        np.random.seed(seed % 2**32)  # noqa: NPY002
         seeded.append("numpy")
 
     if find_spec("torch") is not None:

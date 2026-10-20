@@ -33,8 +33,10 @@ checkpoints/
 # Secrets
 .env
 
-# Editors and OS
-.vscode/
+# Editors and OS (shared VS Code project settings are kept)
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 .DS_Store
 Thumbs.db

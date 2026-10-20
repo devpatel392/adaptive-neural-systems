@@ -20,11 +20,17 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.6",
 ]
-# Numerical stack for Phase 1 (neural networks from scratch). Not installed in
-# Phase 0. PyTorch must be installed from the CPU-only index, see README.md.
+# Numerical stack for Phase 1 (neural networks from scratch). numpy does the
+# array maths; scikit-learn supplies the bundled digits dataset, stratified
+# splitting and the logistic-regression baseline. PyTorch is installed
+# separately from the CPU-only index, see README.md.
 ml = [
-    "numpy>=1.26",
-    "matplotlib>=3.8",
+    "numpy>=2.1",
+    "scikit-learn>=1.5",
+]
+# Learning-curve plots for experiment reports.
+plot = [
+    "matplotlib>=3.9",
 ]
 
 [tool.hatch.build.targets.wheel]
