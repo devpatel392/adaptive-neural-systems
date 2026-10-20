@@ -2,16 +2,17 @@
 
 This document describes the system we intend to build and states clearly what exists today. Anything not listed under **Current implementation** is a plan, not a result.
 
-## Current implementation (Phase 0)
+## Current implementation (Phase 1, in progress)
 
 | Component | Location | Purpose |
 | --- | --- | --- |
 | Package skeleton | `src/adaptive_neural_systems/` | Importable library using the `src` layout |
 | Seed control | `src/adaptive_neural_systems/reproducibility.py` | `set_seed()` seeds Python, and NumPy/PyTorch when installed |
+| Digits data splits | `src/adaptive_neural_systems/data.py` | Fixed, stratified 60/20/20 train/val/test split of scikit-learn's digits; pixels scaled to [0, 1] |
 | Test suite | `tests/` | pytest, configured in `pyproject.toml` |
 | Tooling | `pyproject.toml` | Packaging, pytest and ruff configuration |
 
-No models, retrieval pipelines, graphs or training code exist yet.
+No models, retrieval pipelines, graphs or training code exist yet. Experiment E1.1 is being built step by step.
 
 ### Why a `src` layout
 
@@ -24,7 +25,8 @@ Phase 0 has **zero runtime dependencies**. Every dependency is added in the phas
 | Group | Packages | Reason | Phase |
 | --- | --- | --- | --- |
 | `dev` | pytest, ruff | Testing; linting and formatting in one fast tool | 0 |
-| `ml` | numpy, matplotlib | Array maths for from-scratch networks; training curves | 1 |
+| `ml` | numpy, scikit-learn (pulls in scipy, joblib) | Array maths; digits dataset, stratified splits, logistic-regression baseline | 1 |
+| `plot` | matplotlib | Learning curves (not yet installed) | 1 |
 | (manual) | torch (CPU wheel) | Autograd and layers once from-scratch versions are understood | 1+ |
 
 ## Proposed system architecture
