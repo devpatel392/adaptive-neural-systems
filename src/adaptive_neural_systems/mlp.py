@@ -98,3 +98,84 @@ def forward(params: Params, X: np.ndarray) -> tuple[np.ndarray, Cache]:
     Z2 = H @ W2 + b2
     P = softmax(Z2)
     return P, {"X": X, "Z1": Z1, "H": H, "Z2": Z2}
+
+
+def log_softmax(Z: np.ndarray) -> np.ndarray:
+    """Row-wise log of softmax, computed without ever forming tiny probabilities.
+
+    log p_k = z_k - log sum_j exp(z_j)
+            = (z_k - m) - log sum_j exp(z_j - m),   with m = max_j z_j.
+
+    Computing log(softmax(Z)) directly fails when a probability underflows to 0.0
+    (log 0 = -inf). This form only takes the log of a sum that is at least 1.
+
+    Args:
+        Z: Logits, (N, n_classes).
+
+    Returns:
+        Log-probabilities, (N, n_classes); every entry is <= 0.
+    """
+    shifted = Z - Z.max(axis=1, keepdims=True)
+    return shifted - np.log(np.exp(shifted).sum(axis=1, keepdims=True))
+
+
+def cross_entropy(Z2: np.ndarray, y: np.ndarray) -> float:
+    """Mean cross-entropy loss L = -(1/N) sum_i log p[i, y_i], from logits.
+
+    Args:
+        Z2: Logits, (N, n_classes).
+        y: Integer class labels, (N,).
+
+    Returns:
+        Scalar loss. 0 means the correct class always gets probability 1;
+        ln(n_classes) is the loss of a uniform guess.
+    """
+    if y.shape != (Z2.shape[0],):
+        raise ValueError(f"y must have shape ({Z2.shape[0]},), got {y.shape}")
+    n = Z2.shape[0]
+    # Pick log p[i, y_i] for each row i with fancy indexing: rows 0..N-1, columns y.
+    return float(-log_softmax(Z2)[np.arange(n), y].mean())
+
+
+def loss(params: Params, X: np.ndarray, y: np.ndarray) -> float:
+    """Forward pass followed by cross-entropy. X: (N, n_inputs), y: (N,)."""
+    _, cache = forward(params, X)
+    return cross_entropy(cache["Z2"], y)
+
+
+def backward(params: Params, cache: Cache, y: np.ndarray) -> Params:
+    """Gradients of the mean cross-entropy with respect to every parameter.
+
+    Applies the chain rule from the loss back to the inputs, one layer at a time.
+    Each gradient has the same shape as the parameter it belongs to.
+
+    Args:
+        params: The parameters used in the forward pass.
+        cache: The cache returned by forward(params, X).
+        y: Integer class labels, (N,).
+
+    Returns:
+        {"W1": (64, 32), "b1": (32,), "W2": (32, 10), "b2": (10,)} gradients.
+    """
+    X, Z1, H, Z2 = cache["X"], cache["Z1"], cache["H"], cache["Z2"]
+    n, n_classes = Z2.shape
+
+    # Output layer. For softmax + cross-entropy, dL/dZ2 = (P - Y) / N, where Y is
+    # the one-hot encoding of y. The 1/N comes from taking the mean over the batch.
+    Y = np.eye(n_classes)[y]  # (N, 10)
+    dZ2 = (softmax(Z2) - Y) / n  # (N, 10)
+
+    # Z2 = H @ W2 + b2.
+    dW2 = H.T @ dZ2  # (32, N) @ (N, 10) -> (32, 10): sums each example's contribution
+    db2 = dZ2.sum(axis=0)  # (10,): b2 is added to every row, so its gradient sums the rows
+    dH = dZ2 @ params["W2"].T  # (N, 10) @ (10, 32) -> (N, 32): error sent back to H
+
+    # H = ReLU(Z1). The derivative is 1 where Z1 > 0 and 0 where Z1 < 0. At Z1 == 0
+    # it is undefined; we use 0 (a valid subgradient), which is also what Z1 > 0 gives.
+    dZ1 = dH * (Z1 > 0)  # (N, 32), element-wise
+
+    # Z1 = X @ W1 + b1.
+    dW1 = X.T @ dZ1  # (64, N) @ (N, 32) -> (64, 32)
+    db1 = dZ1.sum(axis=0)  # (32,)
+
+    return {"W1": dW1, "b1": db1, "W2": dW2, "b2": db2}

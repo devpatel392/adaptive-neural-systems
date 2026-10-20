@@ -9,7 +9,8 @@ This document describes the system we intend to build and states clearly what ex
 | Package skeleton | `src/adaptive_neural_systems/` | Importable library using the `src` layout |
 | Seed control | `src/adaptive_neural_systems/reproducibility.py` | `set_seed()` seeds Python, and NumPy/PyTorch when installed |
 | Digits data splits | `src/adaptive_neural_systems/data.py` | Fixed, stratified 60/20/20 train/val/test split of scikit-learn's digits; pixels scaled to [0, 1] |
-| MLP forward pass | `src/adaptive_neural_systems/mlp.py` | He initialisation, ReLU, numerically stable softmax, forward pass with cached activations (no training yet) |
+| MLP forward and backward pass | `src/adaptive_neural_systems/mlp.py` | He initialisation, ReLU, stable softmax and log-softmax, cross-entropy from logits, manual backpropagation (no training loop yet) |
+| Gradient checking | `src/adaptive_neural_systems/gradcheck.py` | Central-difference numerical gradients, relative error, ReLU-kink safety margin |
 | Test suite | `tests/` | pytest, configured in `pyproject.toml` |
 | Tooling | `pyproject.toml` | Packaging, pytest and ruff configuration |
 
