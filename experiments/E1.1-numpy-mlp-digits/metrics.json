@@ -1,0 +1,209 @@
+{
+  "generated_utc": "2026-10-21T10:55:51+00:00",
+  "git": {
+    "commit": "28561bfa4a881ade8d6cf1685cd986efe65b223f",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.13.2",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 186 Stepping 3, GenuineIntel",
+    "packages": {
+      "numpy": "2.5.4",
+      "scikit-learn": "1.9.1",
+      "matplotlib": "3.11.2"
+    }
+  },
+  "wall_time_seconds": 53.4,
+  "config": {
+    "experiment": "E1.1-numpy-mlp-digits",
+    "step": 4,
+    "description": "Mini-batch gradient descent for the from-scratch 64-32-10 NumPy MLP. Model selection on the validation set only; the test set is not evaluated in this step.",
+    "data": {
+      "dataset": "sklearn.datasets.load_digits",
+      "split_seed": 0,
+      "val_fraction": 0.2,
+      "test_fraction": 0.2
+    },
+    "model": {
+      "n_inputs": 64,
+      "n_hidden": 32,
+      "n_outputs": 10,
+      "activation": "relu",
+      "init": "he_normal"
+    },
+    "search": {
+      "learning_rates": [
+        0.01,
+        0.03,
+        0.1,
+        0.3,
+        1.0
+      ],
+      "batch_sizes": [
+        16,
+        32,
+        128
+      ],
+      "epochs": 200,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "selection_metric": "mean validation loss across seeds, minimised over (learning_rate, batch_size, epoch)"
+    },
+    "overfit_check": {
+      "n_examples": 32,
+      "learning_rate": 0.5,
+      "epochs": 300,
+      "seed": 0
+    }
+  },
+  "overfit_check": {
+    "initial_loss": 2.390958616213512,
+    "final_loss": 0.0048780746114647135,
+    "final_accuracy": 1.0
+  },
+  "grid": [
+    {
+      "learning_rate": 0.01,
+      "batch_size": 16,
+      "best_epoch": 200,
+      "best_mean_val_loss": 0.13907312447967363
+    },
+    {
+      "learning_rate": 0.01,
+      "batch_size": 32,
+      "best_epoch": 200,
+      "best_mean_val_loss": 0.16489681607324505
+    },
+    {
+      "learning_rate": 0.01,
+      "batch_size": 128,
+      "best_epoch": 200,
+      "best_mean_val_loss": 0.39511853611399933
+    },
+    {
+      "learning_rate": 0.03,
+      "batch_size": 16,
+      "best_epoch": 125,
+      "best_mean_val_loss": 0.13422338305347528
+    },
+    {
+      "learning_rate": 0.03,
+      "batch_size": 32,
+      "best_epoch": 173,
+      "best_mean_val_loss": 0.135551613482126
+    },
+    {
+      "learning_rate": 0.03,
+      "batch_size": 128,
+      "best_epoch": 200,
+      "best_mean_val_loss": 0.18196451616555123
+    },
+    {
+      "learning_rate": 0.1,
+      "batch_size": 16,
+      "best_epoch": 54,
+      "best_mean_val_loss": 0.1339751909905271
+    },
+    {
+      "learning_rate": 0.1,
+      "batch_size": 32,
+      "best_epoch": 54,
+      "best_mean_val_loss": 0.13317654204609955
+    },
+    {
+      "learning_rate": 0.1,
+      "batch_size": 128,
+      "best_epoch": 200,
+      "best_mean_val_loss": 0.13592618492635158
+    },
+    {
+      "learning_rate": 0.3,
+      "batch_size": 16,
+      "best_epoch": 25,
+      "best_mean_val_loss": 0.13526068540165992
+    },
+    {
+      "learning_rate": 0.3,
+      "batch_size": 32,
+      "best_epoch": 25,
+      "best_mean_val_loss": 0.13322871164706976
+    },
+    {
+      "learning_rate": 0.3,
+      "batch_size": 128,
+      "best_epoch": 82,
+      "best_mean_val_loss": 0.13246610942142142
+    },
+    {
+      "learning_rate": 1.0,
+      "batch_size": 16,
+      "best_epoch": 5,
+      "best_mean_val_loss": 0.9631914204295358
+    },
+    {
+      "learning_rate": 1.0,
+      "batch_size": 32,
+      "best_epoch": 12,
+      "best_mean_val_loss": 0.14242370021627773
+    },
+    {
+      "learning_rate": 1.0,
+      "batch_size": 128,
+      "best_epoch": 28,
+      "best_mean_val_loss": 0.13609602157560685
+    }
+  ],
+  "selected": {
+    "learning_rate": 0.3,
+    "batch_size": 128,
+    "epoch": 82,
+    "per_seed_at_selected_epoch": {
+      "train_loss": [
+        0.03731937359290122,
+        0.03904253724342247,
+        0.037310101575285526
+      ],
+      "val_loss": [
+        0.13889971964904524,
+        0.1319728570557557,
+        0.1265257515594633
+      ],
+      "train_acc": [
+        0.9981429897864438,
+        0.9962859795728877,
+        0.9972144846796658
+      ],
+      "val_acc": [
+        0.9666666666666667,
+        0.9694444444444444,
+        0.9777777777777777
+      ]
+    },
+    "per_seed_at_final_epoch": {
+      "train_loss": [
+        0.012701632548468341,
+        0.011477797473091756,
+        0.011586594666238464
+      ],
+      "val_loss": [
+        0.1455141291204703,
+        0.1459445131144213,
+        0.13583418871426595
+      ],
+      "train_acc": [
+        0.9990714948932219,
+        1.0,
+        1.0
+      ],
+      "val_acc": [
+        0.9722222222222222,
+        0.975,
+        0.9694444444444444
+      ]
+    }
+  }
+}
