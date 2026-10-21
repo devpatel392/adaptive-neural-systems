@@ -10,11 +10,12 @@ This document describes the system we intend to build and states clearly what ex
 | Seed control | `src/adaptive_neural_systems/reproducibility.py` | `set_seed()` seeds Python, and NumPy/PyTorch when installed |
 | Digits data splits | `src/adaptive_neural_systems/data.py` | Fixed, stratified 60/20/20 train/val/test split of scikit-learn's digits; pixels scaled to [0, 1] |
 | MLP forward and backward pass | `src/adaptive_neural_systems/mlp.py` | He initialisation, ReLU, stable softmax and log-softmax, cross-entropy from logits, manual backpropagation (no training loop yet) |
+| Training loop | `src/adaptive_neural_systems/training.py` | Mini-batch gradient descent, seeded shuffling, per-epoch train/val loss and accuracy, NaN/inf detection |
 | Gradient checking | `src/adaptive_neural_systems/gradcheck.py` | Central-difference numerical gradients, relative error, ReLU-kink safety margin |
 | Test suite | `tests/` | pytest, configured in `pyproject.toml` |
 | Tooling | `pyproject.toml` | Packaging, pytest and ruff configuration |
 
-No models, retrieval pipelines, graphs or training code exist yet. Experiment E1.1 is being built step by step.
+Experiment E1.1 (`experiments/E1.1-numpy-mlp-digits/`) is in progress: the NumPy MLP is trained and tuned on validation data; baselines and the final test evaluation are not yet done. No retrieval pipelines or graphs exist yet.
 
 ### Why a `src` layout
 
@@ -28,7 +29,7 @@ Phase 0 has **zero runtime dependencies**. Every dependency is added in the phas
 | --- | --- | --- | --- |
 | `dev` | pytest, ruff | Testing; linting and formatting in one fast tool | 0 |
 | `ml` | numpy, scikit-learn (pulls in scipy, joblib) | Array maths; digits dataset, stratified splits, logistic-regression baseline | 1 |
-| `plot` | matplotlib | Learning curves (not yet installed) | 1 |
+| `plot` | matplotlib (pulls in pillow, fonttools, contourpy, kiwisolver) | Learning curves | 1 |
 | (manual) | torch (CPU wheel) | Autograd and layers once from-scratch versions are understood | 1+ |
 
 ## Proposed system architecture

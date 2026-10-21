@@ -1,0 +1,31 @@
+{
+  "experiment": "E1.1-numpy-mlp-digits",
+  "step": 4,
+  "description": "Mini-batch gradient descent for the from-scratch 64-32-10 NumPy MLP. Model selection on the validation set only; the test set is not evaluated in this step.",
+  "data": {
+    "dataset": "sklearn.datasets.load_digits",
+    "split_seed": 0,
+    "val_fraction": 0.2,
+    "test_fraction": 0.2
+  },
+  "model": {
+    "n_inputs": 64,
+    "n_hidden": 32,
+    "n_outputs": 10,
+    "activation": "relu",
+    "init": "he_normal"
+  },
+  "search": {
+    "learning_rates": [0.01, 0.03, 0.1, 0.3, 1.0],
+    "batch_sizes": [16, 32, 128],
+    "epochs": 200,
+    "seeds": [0, 1, 2],
+    "selection_metric": "mean validation loss across seeds, minimised over (learning_rate, batch_size, epoch)"
+  },
+  "overfit_check": {
+    "n_examples": 32,
+    "learning_rate": 0.5,
+    "epochs": 300,
+    "seed": 0
+  }
+}
